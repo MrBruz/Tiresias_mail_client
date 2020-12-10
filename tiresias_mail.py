@@ -637,10 +637,11 @@ while True:
         for x in nodeList:
             print("User: " + x)
     elif selection == "check":
-        if list(messagestosend.keys()) > 0:
-            for x in list(messagestosend.keys()):
-                if messagestosend[x]:
-                    for y in messagestosend[x]:
+        if len(list(messagesreceived.keys())) > 0:
+            print("You got mail...")
+            for x in list(messagesreceived.keys()):
+                if messagesreceived[x]:
+                    for y in messagesreceived[x]:
                         print("You have a message, " + y + " from user: " + x)
         else:
             print("You have no mail :(")
