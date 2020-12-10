@@ -58,7 +58,7 @@ serverRandomWait=1   # Random wait before sending messages
 counter = 1
 
 torMode = True
-debugLevel = True
+debugLevel = False
 
 
 onionaddr = ""
@@ -72,6 +72,7 @@ class torStem():
                 global onionaddr
 
                 debug("[I] Connecting to TOR via Stem library")
+                print("(1/3) Connecting to TOR...")
                 # Load Stem lib
                 try:
                         from stem.control import Controller
@@ -107,6 +108,7 @@ class torStem():
                 self.hostname = self.controller.create_ephemeral_hidden_service({hidden_service_port: '%s:%d' % (hidden_service_interface, hidden_service_port)}, await_publication = True).service_id + '.onion'
                 onionaddr = self.hostname
                 debug("[C] Hostname is %s" % self.hostname)
+                print("(2/3) Generated hidden onion service...")
 
 
 
@@ -609,28 +611,40 @@ while not initialisationDone:
 
 def clearTerminal():
     for x in range(math.ceil(os.get_terminal_size()[1] / 2)):
-    print ('\n')
+        print ('\n')
 
-clearTerminal()
+print("(3/3) Finished initialisation...")
 
-print("Welcome to the tiresias mail client...")
+print("Welcome to the Tiresias mail client... (User: " + ourId + ")")
 
 while True:
     selection = input("Enter a command: ")
-    if input == "exit":
+    if selection == "exit":
         break
-    elif input == "help":
+    elif selection == "help":
         print("Commands:")
         print("exit - exits the program")
         print("send - send an email")
-    elif input == "send":
+        print("list - list users")
+        print("check - check for emails")
+    elif selection == "send":
         uid = input("Enter uid of user: ")
         msg = input("Enter message to user: ")
+        rqstmsg = '§MSG§' + msg
+        addToMsgsSend(locateNode(uid),rqstmsg.encode())
+    elif selection == "list":
+        nodeList = list(nodeIps.keys())
+        for x in nodeList:
+            print("User: " + x)
+    elif selection == "check":
+        if list(messagestosend.keys()) > 0:
+            for x in list(messagestosend.keys()):
+                if messagestosend[x]:
+                    for y in messagestosend[x]:
+                        print("You have a message, " + y + " from user: " + x)
+        else:
+            print("You have no mail :(")
 
-
-
-
-rqstmsg = '§MSG§' + msg
-addToMsgsSend(locateNode(uid),rqstmsg.encode())
 
 print("Exiting...")
+sys.exit()
