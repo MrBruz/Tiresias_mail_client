@@ -61,7 +61,7 @@ serverRandomWait=1   # Random wait before sending messages
 counter = 1
 
 torMode = True
-debugLevel = True
+debugLevel = False
 
 
 onionaddr = ""
@@ -226,9 +226,7 @@ def addToMsgsRecv(ip,messages,id):
        messagesreceived[ip] = []
     key = fernetKeys[id]
     f = Fernet(key)
-    print(base64.b64decode(messages))
     messages = f.decrypt(base64.b64decode(messages))
-    print(messages)
     messagesreceived[ip].append(messages.decode())
 
 def remove_prefix(text, prefix):
@@ -422,8 +420,8 @@ class Server():
                                                     fernetKeys[id] = fernetKey
                                             elif dataDecoded.startswith('§MSG§'):
                                                     msg = remove_prefix(dataDecoded,'§MSG§')
-                                                    debug('[I] ' + addr[0] + ' ' + msg)
-                                                    addToMsgsRecv(addr[0],msg,id)
+                                                    debug('[I] ' + ip + ' ' + msg)
+                                                    addToMsgsRecv(ip,msg,id)
                                             else:
                                                     debug("[I] <RECEIVED> " + dataDecoded)
                                             messages.append(dataDecoded)
@@ -580,11 +578,6 @@ if type == "CLIENT" or type == "CLIENT-REQUEST-NODES" or type == "OTHER":
         type = "NONE"
 
 
-'''
-if input("[Q] Hey boss, we using TOR? ").lower().startswith('y'):
-    torMode = True
-'''
-
 thread = Thread(target = AutoGenClientThreads)
 thread.start()
 
@@ -675,11 +668,10 @@ while True:
             for x in nodeList:
                 print("User: " + x)
         elif selection == "check":
-            if len(list(messagestosend.keys())) > 0:
-                print(messagestosend)
-                for x in list(messagestosend.keys()):
-                    if messagestosend[x]:
-                        for y in messagestosend[x]:
+            if len(list(messagesreceived.keys())) > 0:
+                for x in list(messagesreceived.keys()):
+                    if messagesreceived[x]:
+                        for y in messagesreceived[x]:
                             print("You have a message, " + y + " from user: " + x)
             else:
                 print("You have no mail :(")
