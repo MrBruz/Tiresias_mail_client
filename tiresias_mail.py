@@ -649,36 +649,40 @@ print("Finished initialisation...")
 print("Welcome to the Tiresias mail client... (User: " + ourId + ")")
 
 while True:
-    selection = input("Enter a command: ")
-    if selection == "exit":
-        break
-    elif selection == "help":
-        print("Commands:")
-        print("exit - exits the program")
-        print("send - send an email")
-        print("list - list users")
-        print("check - check for emails")
-    elif selection == "send":
-        uid = input("Enter uid of user: ")
-        msg = input("Enter message to user: ")
-        rqstmsg = '§HELLO§' + onionaddr + '§' + ourId
-        addToMsgsSend(locateNode(uid),rqstmsg.encode(),"")
-        startEncryption(locateNode(uid))
-        rqstmsg = msg
-        addToMsgsSend(locateNode(uid),rqstmsg.encode(),uid)
-    elif selection == "list":
-        nodeList = list(nodeIps.keys())
-        for x in nodeList:
-            print("User: " + x)
-    elif selection == "check":
-        if len(list(messagestosend.keys())) > 0:
-            print(messagestosend)
-            for x in list(messagestosend.keys()):
-                if messagestosend[x]:
-                    for y in messagestosend[x]:
-                        print("You have a message, " + y + " from user: " + x)
-        else:
-            print("You have no mail :(")
+    try:
+        selection = input("Enter a command: ")
+    except:
+        print("[E] Welp the input thing broke.")
+    else:
+        if selection == "exit":
+            break
+        elif selection == "help":
+            print("Commands:")
+            print("exit - exits the program")
+            print("send - send an email")
+            print("list - list users")
+            print("check - check for emails")
+        elif selection == "send":
+            uid = input("Enter uid of user: ")
+            msg = input("Enter message to user: ")
+            rqstmsg = '§HELLO§' + onionaddr + '§' + ourId
+            addToMsgsSend(locateNode(uid),rqstmsg.encode(),"")
+            startEncryption(locateNode(uid))
+            rqstmsg = msg
+            addToMsgsSend(locateNode(uid),rqstmsg.encode(),uid)
+        elif selection == "list":
+            nodeList = list(nodeIps.keys())
+            for x in nodeList:
+                print("User: " + x)
+        elif selection == "check":
+            if len(list(messagestosend.keys())) > 0:
+                print(messagestosend)
+                for x in list(messagestosend.keys()):
+                    if messagestosend[x]:
+                        for y in messagestosend[x]:
+                            print("You have a message, " + y + " from user: " + x)
+            else:
+                print("You have no mail :(")
 
 
 print("Exiting...")
