@@ -333,6 +333,7 @@ class Server():
                 global initialisationDone
                 global private_key
                 global fernetKey
+                global onionaddr
                 debug("[I] (ServerThread): Received connection from: " + str(addr))
                 conn.setblocking(0)
                 randomwait=random.randint(1,serverRandomWait)
@@ -406,6 +407,8 @@ class Server():
                                                         nodeIps[x.split('§')[0]] = x.split('§')[1]
                                                     debug('[I] ' + "We have received " + str(len(receivedNodes)) + " nodes from " + addr[0])
                                             elif dataDecoded.startswith('§GIVE-FERNET-KEY§'):
+                                                    rqstmsg = '§HELLO§' + onionaddr + '§' + ourId
+                                                    addToMsgsSend(ip,rqstmsg.encode(),"")
                                                     fernetKey = Fernet.generate_key()
                                                     fernetKeys[id] = fernetKey
                                                     pub_key = remove_prefix(dataDecoded,'§GIVE-FERNET-KEY§').split(" ")
@@ -669,6 +672,7 @@ while True:
             print("User: " + x)
     elif selection == "check":
         if len(list(messagestosend.keys())) > 0:
+            print(messagestosend)
             for x in list(messagestosend.keys()):
                 if messagestosend[x]:
                     for y in messagestosend[x]:
