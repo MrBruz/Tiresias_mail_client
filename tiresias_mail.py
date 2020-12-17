@@ -642,7 +642,7 @@ def sendMessage(msg, uid):
                 rqstmsg = '§HELLO§' + onionaddr + '§' + ourId
                 addToMsgsSend(locateNode(uid),rqstmsg.encode(),"")
                 nodesSaidHelloToo.append(uid)
-            if not fernetKeys.get(id) or not len(fernetKeys.get(id)) > 0:
+            if not fernetKeys.get(uid) or not len(fernetKeys.get(uid)) > 0:
                 startEncryption(locateNode(uid))
             rqstmsg = msg
             addToMsgsSend(locateNode(uid),rqstmsg.encode(),uid)
