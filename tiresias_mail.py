@@ -29,6 +29,7 @@ nodes = {}
 nodeIps = {}
 fernetKeys = {}
 threads = []
+nodesSaidHelloToo = []
 maxNodes = 256
 maxNodes2 = maxNodes / 4
 ourId = ''
@@ -634,6 +635,18 @@ addToMsgsSend(inputaddr,rqstmsg.encode(),"")
 rqstmsg = '§GIVE-SVR-VARS§'
 addToMsgsSend(inputaddr,rqstmsg.encode(),"")
 
+def sendMessage(msg, uid):
+            global onionaddr
+            global nodesSaidHelloToo
+            if not uid in nodesSaidHelloToo:
+                rqstmsg = '§HELLO§' + onionaddr + '§' + ourId
+                addToMsgsSend(locateNode(uid),rqstmsg.encode(),"")
+                nodesSaidHelloToo.append(uid)
+            if not fernetKeys.get(id) or not len(fernetKeys.get(id)) > 0:
+                startEncryption(locateNode(uid))
+            rqstmsg = msg
+            addToMsgsSend(locateNode(uid),rqstmsg.encode(),uid)
+
 while not initialisationDone:
     time.sleep(0.2)
 
@@ -658,11 +671,7 @@ while True:
         elif selection == "send":
             uid = input("Enter uid of user: ")
             msg = input("Enter message to user: ")
-            rqstmsg = '§HELLO§' + onionaddr + '§' + ourId
-            addToMsgsSend(locateNode(uid),rqstmsg.encode(),"")
-            startEncryption(locateNode(uid))
-            rqstmsg = msg
-            addToMsgsSend(locateNode(uid),rqstmsg.encode(),uid)
+            sendMessage(msg,uid)
         elif selection == "list":
             nodeList = list(nodeIps.keys())
             for x in nodeList:
