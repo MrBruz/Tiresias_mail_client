@@ -142,7 +142,7 @@ def getRandomNodes(id,nodesInternal,nodeDepth):
                 filteredNodes.append(nodes)
             else:
                 otherNodes.append(nodes)
-        debug(filteredNodes + " " + otherNodes)
+        debug(str(filteredNodes) + " " + str(otherNodes))
         returnNodes = ""
         if not len(filteredNodes) > maxNodes2:
             counter = 1
@@ -317,7 +317,7 @@ class Server():
                                                     nodes[id] = key
                                                     if nodeIps.get(ip) != ip and type == "SERVER":
                                                         nodeIps[id] = ip
-                                                        broadcastUpdate(id):
+                                                        broadcastUpdate(id)
                                                     else:
                                                         nodeIps[id] = ip
                                                     f = open("ts_keys.txt", "a")
@@ -517,7 +517,7 @@ else:
 debug("[I] Running in " + type + " mode")
 
 if type == "CLIENT" or type == "CLIENT-REQUEST-NODES" or type == "OTHER":
-    bootstrap = '5vp2utgu4tbtoxortbalfnsb6ea6wtiffnldaifeg5sghwofwzjsubyd.onion'
+    bootstrap = 'uommu4zujexygdjhvdibnfsfsub3cs2mxgv236mnju7kjiz7kthajwqd.onion'
 
 
 thread = Thread(target = AutoGenClientThreads)
@@ -571,10 +571,11 @@ if path.exists('ts_ids.txt'):
             nodeIps[theirId] = theirIp
     f.close()
 
-rqstmsg = '§REQUEST-CLUSTER-NODES§' + ourId + '§'
-addToMsgsSend(bootstrap,rqstmsg.encode(),"")
-rqstmsg = '§GIVE-SVR-VARS§'
-addToMsgsSend(bootstrap,rqstmsg.encode(),"")
+if type != "SERVER":
+    rqstmsg = '§REQUEST-CLUSTER-NODES§' + ourId + '§'
+    addToMsgsSend(bootstrap,rqstmsg.encode(),"")
+    rqstmsg = '§GIVE-SVR-VARS§'
+    addToMsgsSend(bootstrap,rqstmsg.encode(),"")
 
 def sendMessage(msg, uid):
             global onionaddr
